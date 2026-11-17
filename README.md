@@ -41,7 +41,7 @@
 classDiagram
     direction TB
     
-    package "Camada de Aplicação (Service/Controller)" {
+    package Aplicacao {
         class AlertaController {
             +criarAlerta(alertaDTO: ComunicacaoDTO): ResponseEntity
             +listarAlertas(): ResponseEntity
@@ -55,7 +55,7 @@ classDiagram
         }
     }
     
-    package "Camada de Domínio (Entidades)" {
+    package Dominio {
         class Comunicacao {
             -id: Long
             -tipo: String
@@ -138,25 +138,25 @@ flowchart TD
 
 ```mermaid
 stateDiagram-v2
-    state "Ator: Gestor de Saúde" as Gestor
-    state "Sistema: API Admin/Core" as API
-    state "Ator Secundário: FCM" as Firebase
+    state "Gestor de Saude" as Gestor
+    state "API Admin/Core" as API
+    state "Firebase Cloud Messaging" as Firebase
 
-    Gestor --> API: 1. Preenche e Submete Formulário
+    Gestor --> API: 1. Preenche e Submete Formulario
     state API {
         [*] --> ValidarDados
         ValidarDados --> ValidarInstituicao : Dados Completos
         ValidarDados --> ErroForm : Dados Incompletos
         ValidarInstituicao --> InstituicaoInativa : Falha (RN01)
-        ValidarInstituicao --> PersistirBanco : Instituição Ativa
+        ValidarInstituicao --> PersistirBanco : Instituicao Ativa
         PersistirBanco --> GerarAuditoria : Salvo com sucesso
         GerarAuditoria --> DispararPush : Log gravado
     }
     
-    ErroForm --> Gestor: Alerta: Preencha campos obrigatórios
-    InstituicaoInativa --> Gestor: Alerta: Operação Bloqueada
+    ErroForm --> Gestor: Alerta - Preencha campos
+    InstituicaoInativa --> Gestor: Alerta - Operacao Bloqueada
     
-    DispararPush --> Firebase: Envia Payloads (JSON)
+    DispararPush --> Firebase: Envia Payloads JSON
     state Firebase {
         [*] --> TentarEnvio
         TentarEnvio --> SucessoFCM
@@ -164,7 +164,7 @@ stateDiagram-v2
     }
     
     SucessoFCM --> Gestor: Exibe Mensagem Sucesso
-    TimeoutFCM --> API: Aciona Fila (RabbitMQ)
+    TimeoutFCM --> API: Aciona Fila RabbitMQ
     API --> Gestor: Mensagem de Enfileiramento
 ```
 
