@@ -41,7 +41,7 @@
 classDiagram
     direction TB
     
-    package Aplicacao {
+    namespace Aplicacao {
         class AlertaController {
             +criarAlerta(alertaDTO: ComunicacaoDTO): ResponseEntity
             +listarAlertas(): ResponseEntity
@@ -55,7 +55,7 @@ classDiagram
         }
     }
     
-    package Dominio {
+    namespace Dominio {
         class Comunicacao {
             -id: Long
             -tipo: String
